@@ -31,7 +31,7 @@ class GQNDataset(Dataset):
         return len(os.listdir(self.root_dir))
 
     def __getitem__(self, idx):
-        scene_path = os.path.join(self.root_dir, "{}.pt".format(idx))
+        scene_path = os.path.join(self.root_dir, "{}.pt.gz".format(idx))
 
         with gzip.open(scene_path, 'rb') as f:
 
