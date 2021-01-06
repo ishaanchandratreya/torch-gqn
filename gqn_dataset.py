@@ -1,6 +1,7 @@
 import collections, os, io
 from PIL import Image
 import torch
+import gzip
 from torchvision.transforms import ToTensor, Resize
 from torch.utils.data import Dataset
 import random
@@ -31,7 +32,11 @@ class GQNDataset(Dataset):
 
     def __getitem__(self, idx):
         scene_path = os.path.join(self.root_dir, "{}.pt".format(idx))
-        data = torch.load(scene_path)
+
+        with gzip.open(scene_path, 'rb') as f:
+
+            scene_load = io.BytesIO(f.read())
+            data = torch.load(scene_load)
 
         byte_to_tensor = lambda x: ToTensor()(Resize(64)((Image.open(io.BytesIO(x)))))
 
