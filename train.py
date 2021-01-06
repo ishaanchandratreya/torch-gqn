@@ -3,6 +3,7 @@ import datetime
 import math
 import os
 from tqdm import tqdm
+import random
 from tensorboardX import SummaryWriter
 import torch
 from torch import nn
@@ -21,7 +22,7 @@ if __name__ == '__main__':
                         default="/workspace/dataset/shepard_metzler_7_parts-torch/train")
     parser.add_argument('--test_data_dir', type=str, help='location of test data', \
                         default="/workspace/dataset/shepard_metzler_7_parts-torch/test")
-    parser.add_argument('--root_log_dir', type=str, help='root location of log', default='/workspace/logs')
+    parser.add_argument('--root_log_dir', type=str, help='root location of log', default='dataset/logs')
     parser.add_argument('--log_dir', type=str, help='log directory (default: GQN)', default='GQN')
     parser.add_argument('--log_interval', type=int, help='interval number of steps for logging', default=100)
     parser.add_argument('--save_interval', type=int, help='interval number of steps for saveing models', default=10000)
@@ -53,9 +54,12 @@ if __name__ == '__main__':
     log_interval_num = args.log_interval
     save_interval_num = args.save_interval
     log_dir = os.path.join(args.root_log_dir, args.log_dir)
-    os.mkdir(log_dir)
-    os.mkdir(os.path.join(log_dir, 'models'))
-    os.mkdir(os.path.join(log_dir,'runs'))
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    if not os.path.exists(os.path.join(log_dir, 'models')):
+        os.makedirs(os.path.join(log_dir, 'models'))
+    if not os.path.exists(os.path.join(log_dir, 'runs')):
+        os.makedirs(os.path.join(log_dir, 'runs'))
 
     # TensorBoardX
     writer = SummaryWriter(log_dir=os.path.join(log_dir,'runs'))
